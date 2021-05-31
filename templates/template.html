@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="es">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <link href="/static/style.css" rel="stylesheet">
+        <script src="/static/functions.js"></script>
+        <title>Consultorio</title>
+
+    </head>
+
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" id="blue-wave" viewBox="0 0 1440 320">
+            <path fill="#a2d9ff" fill-opacity="1" d="M0,160L48,149.3C96,139,192,117,288,122.7C384,128,480,160,576,192C672,224,768,256,864,250.7C960,245,1056,203,1152,192C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">
+                <img src="/static/consul-wobck.png" width="90" height="35" class="d-inline-block align-top" id="icon-id" alt="" loading="lazy">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                {% if session.user_id %}
+                    {% if session["user_id"] == 1 %}
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item"><a class="nav-link" href="/current">Consultas</a></li>
+                            <li>‏‏‎‎‏‏‎‎‏‏‎‎‎‏‏‎‎</li>
+                            <li class="nav-item"><a class="nav-link" href="/history">Historial</a></li>
+                        </ul>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="/logout">Cerrar sesion</a></li>
+                        </ul>
+                    {% else %}
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item"><a class="nav-link" href="/">Consultas</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/history">Historial</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/calendar">Recordatorios</a></li>
+                        </ul>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="/logout">Cerrar sesion</a></li>
+                        </ul>
+                    {% endif %}
+                {% else %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link" href="/login">Iniciar sesión</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div id="small-size-navbar">
+                <a>
+                    <img src="/static/menu-icon.jpg" onClick="menuOpen()" width="30" heigth="35">
+                </a>
+
+                <div id="menu-bar">
+                {% if session.user_id %}
+                    {% if session["user_id"] == 1 %}
+                        <a class="nav-link" href="/current">Consultas</a>
+                        <a class="nav-link" href="/history">Historial</a>
+                        <a class="nav-link" href="/logout">Cerrar sesión</a>
+                    {% else %}
+                        <a class="nav-link" href="/">Consultas</a>
+                        <a class="nav-link" href="/history">Historial</a>
+                        <a class="nav-link" href="/calendar">Recordatorios</a>
+                        <a class="nav-link" href="/logout">Cerrar sesión</a>
+                    {% endif %}
+                {% else %}
+                    <a class="nav-link" href="/login">Iniciar sesión</a>
+                {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            {% block main %}{% endblock %}
+        </main>
+    </body>
+</html>

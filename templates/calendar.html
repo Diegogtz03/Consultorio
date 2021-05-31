@@ -1,0 +1,20 @@
+{% extends "template.html" %}
+
+{% block main%}
+    <h1 id="recordatorios-title">Recordatorios</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="list-style-type:none" class=flashes>
+            {% for message in messages %}
+                <li class="alerts">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="post" action="/calendar" id="form-input">
+        <input type="text" name="mail" class="rounded-inputs-inside" placeholder="   Correo">
+        <input type="date" name="date" class="rounded-inputs-inside">
+        <input type="time" name="time" class="rounded-inputs-inside">
+        <button type="submit" class="rounded-button">Recordar</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "template.html" %}
+
+{% block main%}
+<h1 id="consultas-title">Historial</h1>
+
+<br>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="list-style-type:none" class=flashes>
+    {% for message in messages %}
+      <li class="alerts">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="post" action="/history" id="form-input">
+    <input type="text" name="name" class="rounded-inputs-inside" placeholder="   Nombre">
+    <input type="date" name="date" class="rounded-inputs-inside">
+    <input type="radio" name="search-type" checked="checked" id="N" value="N">
+    <label for="N" style="color:white">Nombre</label>
+    <input type="radio" name="search-type" id="F" value="F">
+    <label for="F" style="color:white">Fecha</label>
+    <button type="submit" class="rounded-button">Buscar</button>
+</form>
+
+<br>
+<br>
+
+<table class="user-table">
+    <thead>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>$</th>
+        <th>Fecha</th>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <td>{{ item[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

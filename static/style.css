@@ -1,0 +1,265 @@
+body{
+    background-color: #0e304cf7;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+#icon-id
+{
+    width: 10vmax;
+    height: 4vmax;
+}
+
+.bg-dark
+{
+    height: 100%;
+    height: auto;
+}
+
+#small-size-navbar{
+    display: none;
+}
+
+#menu-bar{
+    width: 0px;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(56, 55, 55);
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.5s;
+}
+
+#login-form {
+    border-radius: 30px 30px 30px 15px;
+    background: #ececec;
+    padding: 20px;
+    width: 22vw;
+    height: 50vh;
+}
+
+#navbarColor01{
+    font-size: 20px;
+}
+
+#blue-wave{
+    transform: scale(1, -1) translateY(-10px);
+    position: absolute;
+}
+
+.login-inputs{
+    padding:17px;
+    margin: 3px;
+    text-align: center;
+}
+
+.rounded-inputs{
+    border-radius: 10px;
+    border: 0px solid;
+    outline: none;
+    width: 11vw;
+    height: 5.5vh;
+    font-size: 1em;
+}
+
+.rounded-inputs-inside{
+    border-radius: 10px;
+    border: 0px solid;
+    outline: none;
+    width: 11vw;
+    height: 2.2em;
+    font-size: 1em;
+}
+
+.rounded-button{
+    width: 4em;
+    height: 2em;
+    border-radius: 8px;
+}
+
+.main-content{
+    display: table;
+    align-items: flex-start;
+    margin: auto;
+    position: relative;
+    transform: translateY(130px);
+}
+
+.form-login{
+    align-items: baseline;
+    margin: auto;
+    position: initial;
+    text-align: center;
+}
+
+.h1, h1{
+    font-family: Gurmukhi MN!important;
+}
+
+.login-icons{
+    margin: 3px;
+}
+
+.alerts{
+    color: red;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.flashes{
+    transition: 0.3s;
+}
+
+.user-table {
+    display: table;
+    margin: auto;
+    border-collapse: collapse;
+    position: relative;
+    font-family: sans-serif;
+    width: 40vw;
+    min-width: 250px;
+    box-shadow: 0 0 20px rgb(109 109 109 / 15%);
+    color: #f77979;
+    text-align:center;
+}
+
+#form-input{
+    display:block;
+    text-align: center;
+}
+
+.user-table thead tr{
+    border-radius: 30px;
+    background-color: #a7bcca;
+    color: #000000;
+    text-align: center;
+}
+
+.user-table th,
+.user-table td{
+    padding: 12px 15px;
+}
+
+.user-table tbody tr:last-of-type{
+    border-bottom: thin solid #f3f3f3;
+}
+
+.user-table tbody tr{
+    border-bottom: thin solid #dddddd;
+}
+
+#consultas-title, #recordatorios-title{
+    color: beige;
+    font-size: 5em;
+    text-align: center;
+}
+
+#login-button{
+    color: white;
+    border-radius: 10px;
+    width: 200px;
+    height: 50px;
+    outline: none;
+    border: 0px;
+    background-image: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+}
+
+@media only screen and (max-width: 996px){
+    #icon-id{
+        width: 12vmax;
+        height: 5vmax;
+    }
+
+    #navbarColor01{
+        display: none;
+    }
+
+    #small-size-navbar{
+        display: block;
+    }
+
+    #blue-wave{
+        transform: scale(1, -1) translateY(-65px);
+        position: absolute;
+    }
+
+    #login-form{
+        width: 85vw;
+        height: 55vmax;
+        border-radius: 30px 30px 30px 15px;
+        background: #ececec;
+        padding: 20px;
+    }
+
+    .main-content{
+        display: table;
+        align-items: flex-start;
+        margin: auto;
+        position: relative;
+        transform: translateY(90px);
+    }
+
+    .rounded-inputs{
+        border-radius: 10px;
+        border: 0px solid;
+        outline: none;
+        width: 50vw;
+        height: 6vh
+    }
+
+    #form-input{
+        text-align: center;
+        vertical-align: baseline;
+    }
+
+    .rounded-inputs-inside{
+        border-radius: 10px;
+        outline: none;
+        width: 40vw;
+        height: 2.5em;
+        font-size: 1em;
+    }
+
+    .user-table {
+        position: relative;
+        margin: auto;
+        border-collapse: collapse;
+        display: table;
+        font-family: sans-serif;
+        width: 60vw;
+        min-width: 100%;
+        box-shadow: 0 0 20px rgb(109 109 109 / 15%);
+        color: #f77979;
+        text-align: center;
+    }
+
+    #form-input{
+        display:inline-block;
+        margin-left: 9vw;
+        margin-right: 9vw;
+    }
+}
+
+svg path{
+    animation:pathAnim 3s;
+}
+
+@keyframes pathAnim{
+    0%{
+        d: path("M0,160L48,149.3C96,139,192,117,288,122.7C384,128,480,160,576,192C672,224,768,256,864,250.7C960,245,1056,203,1152,192C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+    }
+
+    50%{
+        d: path("M0,256L48,261.3C96,267,192,277,288,266.7C384,256,480,224,576,213.3C672,203,768,213,864,208C960,203,1056,181,1152,186.7C1248,192,1344,224,1392,240L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+    }
+
+    100%{
+        d: path("M0,160L48,149.3C96,139,192,117,288,122.7C384,128,480,160,576,192C672,224,768,256,864,250.7C960,245,1056,203,1152,192C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+    }
+
+}

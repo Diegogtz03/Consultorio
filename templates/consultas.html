@@ -1,0 +1,53 @@
+{% extends "template.html" %}
+
+{% block main%}
+<h1 id="consultas-title">Consultas</h1>
+
+<br>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="list-style-type:none" class=flashes>
+    {% for message in messages %}
+        <li class="alerts">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<form method="post" action="/" id="form-input">
+    <input type="text" name="name" class="rounded-inputs-inside" placeholder="Nombre">
+    <input type="number" name="quantity" step="any" class="rounded-inputs-inside" placeholder="Cantidad">
+    <input type="radio" name="currency" checked="checked" id="MXN" value="MXN">
+    <label for="MXN" style="color:white">MXN</label>
+    <input type="radio" name="currency" id="USD" value="USD">
+    <label for="USD" style="color:white">USD</label>
+    <button type="submit" class="rounded-button">Ingresar</button>
+</form>
+
+<br>
+<br>
+
+<table class="user-table">
+    <thead>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>$</th>
+        <th>‎‏‏‎</th>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <form method="get" action="/edit"><td><button name="edit_button" value={{ item[0] ~- item[2] }}>editar</button></td></form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<br>
+
+<form method="post" action="/submit"><button id="login-button" style="display:block; margin:auto;">TIMBRAR</button></form>
+{% endblock %}

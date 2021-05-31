@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+
+{% block main%}
+<h1 id="consultas-title">Consultas de hoy</h1>
+
+<br>
+<br>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="list-style-type:none" class=flashes>
+    {% for message in messages %}
+      <li class="alerts">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<table class="user-table">
+    <thead>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>$</th>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td style="color:white"><b>TOTAL MX</b></td>
+            <td style="color:white"><b>{{ totalMxn }}</b></td>
+            <td style="color:white">MXN</td>
+        </tr>
+        <tr>
+            <td style="color:white"><b>TOTAL USD</b></td>
+            <td style="color:white"><b>{{ totalUsd }}</b></td>
+            <td style="color:white">USD</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

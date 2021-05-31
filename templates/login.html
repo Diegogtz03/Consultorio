@@ -1,0 +1,22 @@
+{% extends "template.html" %}
+
+{% block main%}
+<div id="login-form">
+    <form class="form-login" action="/login" method="post">
+        <h1 id="login-title">LOGIN</h1>
+        <hr>
+        <div class="login-inputs"><image class="login-icons" src="/static/user-icon.png" width="30px"></image><input name="username1" class="rounded-inputs" type="text" placeholder="  Usuario" autocomplete="off"></div>
+        <div class="login-inputs"><image class="login-icons"src="/static/password-icon.png" width="30px"></image><input name="password" class="rounded-inputs" type="password" placeholder="  Contraseña" autocomplete="off"></div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul style="list-style-type:none" class=flashes>
+            {% for message in messages %}
+              <li class="alerts">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <div><button id="login-button" type="submit" style="margin: 30px">Iniciar sesión</button></div>
+    </form>
+</div>
+{% endblock %}

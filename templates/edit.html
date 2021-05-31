@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+
+{% block main%}
+<h1 id="consultas-title">Editar</h1>
+
+<br>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="list-style-type:none" class=flashes>
+    {% for message in messages %}
+        <li class="alerts">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="post" action="/edit" id="form-input">
+    <input type="text" name="name" class="rounded-inputs-inside" placeholder="Nombre" value={{ bName }}>
+    <input type="number" name="quantity" step="any" class="rounded-inputs-inside" value={{ bQuantity }} placeholder="Cantidad">
+    <input type="radio" name="currency" {{ boolMx }} id="MXN" value="MXN">
+    <label for="MXN" style="color:white">MXN</label>
+    <input type="radio" name="currency" {{ boolUsd }} id="USD" value="USD">
+    <label for="USD" style="color:white">USD</label>
+    <button type="submit" class="rounded-button">Editar</button>
+</form>
+
+<form method="get" action="/" id="form-input" style="display: block; align-items: center;">
+  <button type="submit" class="rounded-button">Cancelar</button>
+</form>
+
+{% endblock %}
