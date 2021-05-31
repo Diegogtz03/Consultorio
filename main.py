@@ -354,3 +354,4 @@ def create_app():
         else:
             # Return the template of calendar.html
             return render_template("calendar.html")
+    return app
