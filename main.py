@@ -13,6 +13,8 @@ from extraFunctions import login_required, create_hash
 from datetime import date
 
 # Make an instance of a Flask app
+app = Flask(__name__)
+
 def create_app():
     app = Flask(__name__)
     return app
