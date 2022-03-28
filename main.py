@@ -1,14 +1,20 @@
-from flask import Flask, flash, redirect, render_template, request, session
+from ssl import ALERT_DESCRIPTION_DECODE_ERROR
+from flask import Flask, flash, redirect, render_template, url_for, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from sender import email_sequence
 import sqlite3
 import re
+import os
+import requests
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
 import hashlib
 import hmac
 import pytz
 import datetime
-from events import main
+from events import API_SERVICE_NAME, API_VERSION, SCOPES, main
 from extraFunctions import login_required, create_hash
 from datetime import date
 
@@ -22,6 +28,12 @@ app.config["SESSION_FILE_THRESHOLD"] = 400
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 Session(app)
+
+CLIENT_SECRETS_FILE = "client_seret.json"
+API_SERVICE_NAME_1 = 'calendar'
+API_VERSION = 'v2'
+SCOPES_CAL = ['https://www.googleapis.com/auth/calendar.readonly']
+
 
 # Function that changes a variable stored in the database so it acts as a global variable
 def set_variables(name, quantity):
@@ -54,6 +66,60 @@ def after_request(response):
     response.headers["Cache-Control"] = "no-cache"
     response.headers["Pragma"] = "no-cache"
     return response
+
+@app.route('/calendar')
+def test_api_request():
+    if 'credentials' not in session:
+        return redirect('authorize')
+    
+    credentials = google.oauth2.credentials.Credentials(
+        **session['credentials'])
+
+    calendar = googleapiclient.discovery.build(
+        API_SERVICE_NAME_1, API_VERSION, credentials=credentials)
+    
+    # Call the Calendar API
+    
+    # Gets tomorrow's date to send it to the API
+    tmr = datetime.datetime.today() + datetime.timedelta(days=1)
+    # Gets date 2 days from now to send it to the API
+    tmr_tmr = datetime.datetime.today() + datetime.timedelta(days=2)
+    # Format the minimum time to meet the API's requirements
+    tmin = tmr.strftime("%Y-%m-%dT00:00:00Z")
+    # Format the maximum time to meet the API's requirements
+    tmax = tmr_tmr.strftime("%Y-%m-%dT05:00:00Z")
+    # Send the data to the calendar to retrieve the events
+
+    events_result = calendar.events().list(calendarId='primary', timeMin=tmin, timeMax=tmax, singleEvents=True, orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    if not events:
+        print('No upcoming events found.')
+    for event in events:
+        # Using regex, the email is found within all of the event's description
+        email = re.findall(r'[\w\.-]+@[\w\.-]+', event['description'])
+        # if an email is found in the appoitment, the email is sent, otherwise it is ignored
+        if len(email) > 0:
+            # Send an email sequence per each event found in the calendar
+            email_sequence(email[0], event['start']['dateTime'][11:16], event['start']['dateTime'][0:10])
+
+
+@app.route('/authorize_calendar')
+def authorize_calendar():
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, scopes = SCOPES_CAL)
+    
+    flow.redirect_uri = url_for('oauth2callback', _external=True)
+
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true')
+    
+    session['state'] = state
+
+    return redirect(authorization_url)
+
+
 
 # Handling the "/" route which is the main page
 @app.route("/", methods=["GET", "POST"])

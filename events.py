@@ -27,7 +27,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
 # If modifying these scopes, delete the file token.json.
+CLIENT_SECRET_FILE = "credentials_calendar.json"
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+API_SERVICE_NAME = 'calendar'
+API_VERSION = 'v2'
 
 
 def main():
