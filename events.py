@@ -20,11 +20,14 @@ from __future__ import print_function
 import datetime
 import os.path
 import re
+
+import google_auth_oauthlib
 from sender import email_sequence
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
 CLIENT_SECRET_FILE = "credentials_calendar.json"
@@ -33,31 +36,8 @@ API_SERVICE_NAME = 'calendar'
 API_VERSION = 'v2'
 
 
-def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token-calendar.json'):
-        creds = Credentials.from_authorized_user_file('token-calendar.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials_calendar.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token-calendar.json', 'w') as token:
-            token.write(creds.to_json())
-
+def main(creds):
     service = build('calendar', 'v3', credentials=creds)
-
-    # Call the Calendar API
     
     # Gets tomorrow's date to send it to the API
     tmr = datetime.datetime.today() + datetime.timedelta(days=1)
