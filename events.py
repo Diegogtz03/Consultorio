@@ -36,36 +36,8 @@ API_SERVICE_NAME = 'calendar'
 API_VERSION = 'v2'
 
 
-def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token-calendar.json'):
-        creds = Credentials.from_authorized_user_file('token-calendar.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials_calendar.json', SCOPES)
-            flow.redirect_uri = 'http://'
-            authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
-            # REDIRECT USING FLASK to authorization URL
-            creds = flow.run_local_server(port=0)
-            print(creds.token)
-        # Save the credentials for the next run
-        with open('token-calendar.json', 'w') as token:
-            token.write(creds.to_json())
-    
-
+def main(creds):
     service = build('calendar', 'v3', credentials=creds)
-
-    # Call the Calendar API
     
     # Gets tomorrow's date to send it to the API
     tmr = datetime.datetime.today() + datetime.timedelta(days=1)

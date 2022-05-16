@@ -68,9 +68,10 @@ def after_request(response):
 @app.route('/mails')
 def mails():
     creds = Credentials.from_authorized_user_file('token-calendar.json', SCOPES)
+    
     # Call to events
-    print("SUCESSSS LETSS GOOOO")
-
+    main(creds)
+    flash("Correos Enviados")
     return redirect("/")
     
 
