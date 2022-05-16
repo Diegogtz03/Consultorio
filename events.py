@@ -20,11 +20,14 @@ from __future__ import print_function
 import datetime
 import os.path
 import re
+
+import google_auth_oauthlib
 from sender import email_sequence
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
 CLIENT_SECRET_FILE = "credentials_calendar.json"
@@ -50,10 +53,15 @@ def main():
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials_calendar.json', SCOPES)
+            flow.redirect_uri = 'http://'
+            authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+            # REDIRECT USING FLASK to authorization URL
             creds = flow.run_local_server(port=0)
+            print(creds.token)
         # Save the credentials for the next run
         with open('token-calendar.json', 'w') as token:
             token.write(creds.to_json())
+    
 
     service = build('calendar', 'v3', credentials=creds)
 
