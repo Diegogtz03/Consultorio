@@ -36,8 +36,8 @@ API_SERVICE_NAME = 'calendar'
 API_VERSION = 'v2'
 
 
-def main(creds):
-    service = build('calendar', 'v3', credentials=creds)
+def main(creds_calendar, creds_gmail):
+    service = build('calendar', 'v3', credentials=creds_calendar)
     
     # Gets tomorrow's date to send it to the API
     tmr = datetime.datetime.today() + datetime.timedelta(days=1)
@@ -59,7 +59,7 @@ def main(creds):
         # if an email is found in the appoitment, the email is sent, otherwise it is ignored
         if len(email) > 0:
             # Send an email sequence per each event found in the calendar
-            email_sequence(email[0], event['start']['dateTime'][11:16], event['start']['dateTime'][0:10])
+            email_sequence(email[0], event['start']['dateTime'][11:16], event['start']['dateTime'][0:10], creds_gmail)
 
 if __name__ == '__main__':
     main()

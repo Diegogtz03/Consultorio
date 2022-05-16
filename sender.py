@@ -28,39 +28,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-
-def main():
-    """Shows basic usage of the Gmail API.
-    Lists the user's Gmail labels.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token-gmail.json'):
-        creds = Credentials.from_authorized_user_file('token-gmail.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials_gmail.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token-gmail.json', 'w') as token:
-            token.write(creds.to_json())
-
-    return build('gmail', 'v1', credentials=creds)
-
-    # Call the Gmail API
-
 # Function to send an email, made so that the function could be called from another function just one time
-def email_sequence(patient_email, ap_time, ap_date):
+def email_sequence(patient_email, ap_time, ap_date, creds_gmail):
     # connects to the API
-    service = main()
+    service = build('gmail', 'v1', credentials=creds_gmail)
     send_message(service, b'me', create_message(patient_email, ap_time, ap_date))
 
 # Function that creates the message to be sent
@@ -89,7 +60,3 @@ def send_message(service, user_id, message):
         service.users().messages().send(userId="me", body=message).execute()
     except requests.HTTPError:
         print("ERROR")
-
-
-if __name__ == '__main__':
-    main()
