@@ -24,6 +24,7 @@ from datetime import date
 # Make an instance of a Flask app
 app = Flask(__name__)
 SCOPES_CAL = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES_MAIL = ['https://www.googleapis.com/auth/gmail.send']
 
 # Configure the app
 # https://flask-session.readthedocs.io/en/latest/
@@ -67,11 +68,38 @@ def after_request(response):
 
 @app.route('/mails')
 def mails():
-    creds = Credentials.from_authorized_user_file('token-calendar.json', SCOPES)
+
+    if os.path.exists('token-gmail.json'):
+        creds_gmail = Credentials.from_authorized_user_file('token-gmail.json', SCOPES)
+
+        if creds_gmail and creds_gmail.expired and creds_gmail.refresh_token:
+            creds_gmail.refresh(Request())
+        
+    else:
+        return redirect("/authorize_gmail")
+    
+    creds_calendar = Credentials.from_authorized_user_file('token-calendar.json', SCOPES)
     
     # Call to events
-    main(creds)
+    main(creds_calendar, creds_gmail)
+
+    # Connect to the database
+    connection = sqlite3.connect("consultorio.db")
+    db = connection.cursor()
+    # The previous checklist gets deleted
+    db.execute("DELETE FROM checklist")
+    # A new line is inserted into the checklist with today's date
+    # Retrieve's today's date from my specific timezone
+    today = datetime.datetime.now(pytz.timezone('America/Monterrey'))
+    # Format the string to only include the date and not the time
+    todayDate = today.strftime("%Y-%m-%d")
+    db.execute("INSERT INTO checklist(date, checker) VALUES(?, ?)", (str(todayDate), 1))
+    # Saves the changes
+    connection.commit()
+    connection.close()
+
     flash("Correos Enviados")
+
     return redirect("/")
     
 
@@ -95,10 +123,44 @@ def oauth2callbackcal():
     return redirect("/mails")
 
 
+
+@app.route('/oauth2callbackmail')
+def oauth2callbackmail():
+    state = session['state']
+
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file("credentials_gmail.json", scopes=SCOPES_MAIL, state=state)
+    flow.redirect_uri = url_for('oauth2callbackmail', _external=True)
+
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+
+    credentials = flow.credentials
+
+    # Save credentials to json file
+    with open('token-gmail.json', 'w') as token:
+            token.write(credentials.to_json())
+
+    # Return redirect where the mails are sent
+    return redirect("/mails")
+
+
+
 @app.route('/authorize_calendar')
 def authorize_calendar():
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file("credentials_calendar.json", scopes=SCOPES_CAL)
     flow.redirect_uri = flow.redirect_uri = url_for('oauth2callbackcal', _external=True)
+
+    authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+
+    session['state'] = state
+
+    return redirect(authorization_url)
+
+
+@app.route('/authorize_gmail')
+def authorize_gmail():
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file("credentials_gmail.json", scopes=SCOPES_MAIL)
+    flow.redirect_uri = flow.redirect_uri = url_for('oauth2callbackmail', _external=True)
 
     authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
 
@@ -219,16 +281,13 @@ def login():
                         # If the checklist doesn't match today's date
                         if (checklist[0][1] != str(todayDate) and checklist[0][2] == 1):
                             creds = None
-                            # The file token.json stores the user's access and refresh tokens, and is
-                            # created automatically when the authorization flow completes for the first
-                            # time.
                             if os.path.exists('token-calendar.json'):
                                 creds = Credentials.from_authorized_user_file('token-calendar.json', SCOPES)
 
                                 if creds and creds.expired and creds.refresh_token:
                                     creds.refresh(Request())
-                                else:
-                                    return redirect("/mails")
+                                
+                                return redirect("/mails")
 
                             else:
                                 # Redirect user to authorize the credentials
