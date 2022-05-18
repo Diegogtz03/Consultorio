@@ -14,6 +14,7 @@ patients of their appointments through mail witth the communication of different
 ## Possible Improvements
 - Block the assistant profile of looking up history of appointment costs (Increases Security
 - Package the whole system in a server allowing for continous running of the system
+- Configure the Website to allow the distribution of the website to other doctors
 - Automatically and periodically make database backups
 - Improve website's overall looks
 - Make it responsive on all devices
